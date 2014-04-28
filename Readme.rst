@@ -1,13 +1,10 @@
-MOC TYPO3 Neos vagrant file
-==============================
-
-Description
---------------
+MOC TYPO3 Neos demo-site Vagrant manifest
+=========================================
 
 Vagrant configuration for running a new debian based TYPO3 Neos dev or demo site for on an environment similar to
-MOC A/S hosting production machines.
+MOC A/S hosting production machines. The machines are running Debian wheezy, and are provisioned using the built-in puppet provisioner.
 
-When installed, all required Neos packages are installed, and a basic TYPO3.org demo Neos site is set up will all requirements.
+When installed, all required Neos packages are installed, and a basic TYPO3.org demo Neos site is set up with all requirements.
 
 The vagrant files work equally well on Virtualbox or VMWare fusion. The later has significant better performance though.
 
