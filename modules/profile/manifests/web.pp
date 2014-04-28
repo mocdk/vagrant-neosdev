@@ -8,6 +8,10 @@ class profile::web {
 	# Make sure PHP is included
 	include apache::mod::php
 
+	apache::mod { 'rewrite': }
+	apache::mod { 'headers': }
+
+
 	# Root directory for sites in MOC Configuration
 	file { "/home/sites":
 		ensure => "directory",

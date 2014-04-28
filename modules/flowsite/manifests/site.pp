@@ -43,8 +43,6 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 	# Make logs directory
 	file { "/home/sites/${sitename}/logs": ensure => "directory", require => File["/home/sites/${sitename}"], owner => 'vagrant'}
 
-	notify {"Installing site ${basedistribution} from repository ${repository}. Please wait, it might take a while....":}
-
 	# Install Neos base
 	exec { 'install-neos-base':
 		environment => ["HOME=/home/sites/${sitename}"],
@@ -54,16 +52,29 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 		user    => 'vagrant',
 		require => [Exec['download composer'], File["/home/sites/${sitename}"]],
 		creates => "/home/sites/${sitename}/flow",
-		timeout => 1800,
+		timeout => 3600,
 		notify  => Class['Apache::Service'],
 	}
-
 
 	exec { 'fix-permissions':
 		path    => '/usr/bin:/bin:/usr/sbin:/sbin:./',
 		cwd     => "/home/sites/${sitename}/flow",
 		user    => 'root',
 		command => "php /home/sites/${sitename}/flow/flow flow:core:setfilepermissions vagrant www-data www-data",
+		require => Exec['install-neos-base'],
+		refreshonly => true
+	}
+
+	$dbHost = 'localhost'
+	$dbName = $sitename
+	$dbPassword = 'Haebahw0meVo'
+	$dbUsername = $sitename
+
+	file {"/home/sites/${sitename}/flow/Configuration/Settings.yaml":
+		#content => $settings,
+		content => template('flowsite/Settings.yaml.erb'),
+		owner => 'vagrant',
+		group => 'www-data',
 		require => Exec['install-neos-base']
 	}
 
@@ -76,9 +87,28 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 		access_log_file => 'access.log',
 		error_log_file => 'error.log',
 		logroot => "/home/sites/${sitename}/logs",
-		require => Exec['fix-permissions', 'install-neos-base']
+		require => Exec['install-neos-base'],
+		directories => [{
+			path => "/home/sites/${sitename}/flow/Web",
+			allow_override => ['All'],
+		}]
+
 	}
 
-	#todo rebuild cache
+	mysql::db { $sitename:
+		user     => $sitename,
+		password => $dbPassword,
+		host     => 'localhost',
+		grant    => ['all'],
+	}
+
+	#Run Doctrine create
+	exec {'create-doctrine':
+		path    => '/usr/bin:/bin:/usr/sbin:/sbin:./',
+		cwd     => "/home/sites/${sitename}/flow",
+		command => "php flow doctrine:create",
+		require => [File["/home/sites/${sitename}/flow/Configuration/Settings.yaml"], Mysql::Db[$sitename], Exec['install-neos-base']],
+		unless => "mysql -uroot INFORMATION_SCHEMA -e 'select * from TABLES WHERE TABLE_SCHEMA=\"$dbName\"' | grep 'typo3_flow_resource_resource'"
+	}
 
 }

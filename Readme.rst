@@ -8,21 +8,37 @@ Simple Vagrant configuration for running a new debian based TYPO3 Neos dev or de
 
 When installed, all required Neos packages are installed, and a basic Neos site is set up.
 
-Installation
----------------
+The vagrant files work equally well on Virtualbox or VMWare fusion. The later has significant better performance though.
 
-Make sure you have a correct Debian box in vagrant. For vagrant with virtualbox, you could use the ones listeded here http://puppet-vagrant-boxes.puppetlabs.com/
+Installation
+------------
+
+Install the required debian basebox into your vagrant installation (only needed once). Do a vagrant up and go check
+out that new Vibemme coffemachine at work, because you are in for little wait. When properly caffeinated, your new
+neossite is available at http://192.168.66.50/ and you can log in at user neossite with password neossite
+
+
+Virtualbox basebox installation
+-------------------------------
+
+Make sure you have a correct Debian box in vagrant. For vagrant with virtualbox, you could use the ones listed
+here http://puppet-vagrant-boxes.puppetlabs.com/.
 
  vagrant box add debian http://puppet-vagrant-boxes.puppetlabs.com/debian-73-x64-virtualbox-puppet.box
 
-After this, just rung
+VMWare fusion basebox installation
+----------------------------------
 
- vagrant up
+Buy and install VMWare fusion. Also buy the vagrant VMWare fusion adaptor. Follow the instruction which includes fetching
+the plugin and installing the license with
 
-Wait for 10-20 minutes depending on internet speed, and then access
+ vagrant plugin install vagrant-vmware-fusion
+ vagrant plugin license vagrant-vmware-fusion license.lic
 
- http://192.168.33.50/setup/
+Then import the correct debian box with
 
-To set up your Neos installation.
+ http://puppet-vagrant-boxes.puppetlabs.com/debian-70rc1-x64-vf503.box
+
+All of theses steps are only needed on the first run.
 
 Enjoy!

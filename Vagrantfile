@@ -5,6 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "mocflow"
   config.vm.box = "debian"
   config.vm.network :private_network, ip: "192.168.66.50"
+  config.vm.network "public_network"
   config.ssh.forward_agent = true
   config.vm.provision "puppet" do |puppet|
     puppet.module_path = "modules"

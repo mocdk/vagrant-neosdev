@@ -5,7 +5,9 @@ class profile::base {
 	}
 
 	apt::source { 'main':
-		location => 'http://ftp.dk.debian.org/debian/',
+		#location => 'http://ftp.dk.debian.org/debian/',
+		#location => 'http://mirrors.dotsrc.org/debian/',
+		location => 'http://ftp2.de.debian.org/debian/',
 		repos => 'main contrib non-free'
 	}
 
