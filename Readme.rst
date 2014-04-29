@@ -101,6 +101,8 @@ Install basic Neos site from your own composer repository, and import the site
 Install a full Neos site from your own (in this case private) composer repository, create a user, and import a full site into
 the new installation.
 
+Note that we have to add the ssh key for our private repository git.moc.net to make it work. A convenient puppet module for this is present.
+
 ::
 
  class profile::myowncustomsite {
@@ -108,6 +110,12 @@ the new installation.
 	include profile::php
 	include profile::devtools
 	include profile::db
+
+	# Add private repository to roots known hosts
+	ssh::known_hosts {'git.moc.net':
+		username => 'root',
+		homedir => '/root/'
+	}
 
 	flowsite::site {'myneossite':
 		package => "moc/mocnet-base-distribution",

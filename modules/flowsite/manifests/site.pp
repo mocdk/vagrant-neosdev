@@ -44,9 +44,9 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 	file { "/home/sites/${sitename}/logs": ensure => "directory", require => File["/home/sites/${sitename}"], owner => 'vagrant'}
 
 	# Install Neos base
-	exec { 'install-neos-base':
+	exec { "composer-install-${sitename}":
 		environment => ["HOME=/home/sites/${sitename}"],
-		command => "/usr/local/bin/composer create-project ${basedistribution} flow --dev -s'dev' --repository-url='${repository}'",
+		command => "/usr/local/bin/composer create-project ${basedistribution} flow --dev -s'dev' --keep-vcs -n --repository-url='${repository}'",
 		path    => '/usr/bin:/bin:/usr/sbin:/sbin',
 		cwd     => "/home/sites/${sitename}",
 		user    => 'vagrant',
@@ -54,14 +54,15 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 		creates => "/home/sites/${sitename}/flow",
 		timeout => 3600,
 		notify  => Class['Apache::Service'],
+		refresh => Exec['fix-permissions-${sitename}]
 	}
 
-	exec { 'fix-permissions':
+	exec { "fix-permissions-${sitename}":
 		path    => '/usr/bin:/bin:/usr/sbin:/sbin:./',
 		cwd     => "/home/sites/${sitename}/flow",
 		user    => 'root',
 		command => "php /home/sites/${sitename}/flow/flow flow:core:setfilepermissions vagrant www-data www-data",
-		require => Exec['install-neos-base'],
+		require => Exec["composer-install-${sitename}"],
 		refreshonly => true
 	}
 
@@ -75,7 +76,7 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 		content => template('flowsite/Settings.yaml.erb'),
 		owner => 'vagrant',
 		group => 'www-data',
-		require => Exec['install-neos-base']
+		require => Exec["composer-install-${sitename}"]
 	}
 
 	apache::vhost { $url:
@@ -87,7 +88,7 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 		access_log_file => 'access.log',
 		error_log_file => 'error.log',
 		logroot => "/home/sites/${sitename}/logs",
-		require => Exec['install-neos-base'],
+		require => Exec["composer-install-${sitename}"],
 		directories => [{
 			path => "/home/sites/${sitename}/flow/Web",
 			allow_override => ['All'],
@@ -100,15 +101,20 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 		password => $dbPassword,
 		host     => 'localhost',
 		grant    => ['all'],
+		charset  => 'utf8',
+		collate  => 'utf8_danish_ci'
 	}
 
-	#Run Doctrine create
-	exec {'create-doctrine':
+	#Run Doctrine migrate to populate the database
+	exec {"doctrine-migrate-${sitename}":
 		path    => '/usr/bin:/bin:/usr/sbin:/sbin:./',
 		cwd     => "/home/sites/${sitename}/flow",
-		command => "php flow doctrine:create",
-		require => [File["/home/sites/${sitename}/flow/Configuration/Settings.yaml"], Mysql::Db[$sitename], Exec['install-neos-base']],
-		unless => "mysql -uroot INFORMATION_SCHEMA -e 'select * from TABLES WHERE TABLE_SCHEMA=\"$dbName\"' | grep 'typo3_flow_resource_resource'"
+		command => "php flow doctrine:migrate",
+		user => "vagrant",
+		require => [File["/home/sites/${sitename}/flow/Configuration/Settings.yaml"], Mysql::Db[$sitename], Exec["composer-install-${sitename}"]],
+		onlyif => "php flow doctrine:migrationstatus | grep 'not migrated'"
 	}
+
+	#Todo: clear cache force
 
 }
