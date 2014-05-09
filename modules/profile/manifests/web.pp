@@ -22,7 +22,8 @@ class profile::web {
 	#Make sure the vagrant user is part of the www-data group
 	user {'vagrant':
 		ensure => present,
-		groups => ['vagrant' , 'cdrom', 'sudo', 'audio', 'video', 'www-data'],
+		gid => 'www-data',
+		groups => ['www-data', 'cdrom', 'sudo', 'audio', 'video'],
 		require => Package['httpd']
 	}
 

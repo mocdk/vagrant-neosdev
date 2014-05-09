@@ -4,14 +4,25 @@ MOC TYPO3 Neos demo-site Vagrant manifest
 Vagrant configuration for running a new debian based TYPO3 Neos dev or demo site for an environment similar to
 MOC hosting production machines. The machine runs Debian wheezy, and is provisioned using the built-in puppet provisioner.
 
+Vagrant 1.5 or newer is requied
+
 When installed, all required Neos packages are installed, and a basic TYPO3.org demo Neos site is set up with all requirements.
 
 The vagrant files work equally well on Virtualbox or VMWare fusion. The latter has significant better performance though.
 
+When the box is provisioned, an NFS export from the guest /home/sites/ is made available. You can mount this in your host
+ with
+
+::
+
+ sudo mount -orw -oresvport  -t nfs 192.168.66.50:/home/sites workdir
+
+Or use the provided mountNfs.sh script which will create a directory "workdir" and mount the guest /home/sites/
+
 Installation
 ------------
 
-Install the required debian basebox into your vagrant installation (only needed once).
+Boxes for this are hosted on vagrantcloud, so there is no need to install any baseboxes.
 
 Do a vagrant up and go and check out that new Vibemme coffeemachine at work, because you are in for little wait.
 
@@ -25,46 +36,6 @@ If you have problems with initiating local network when calling vagrant up, comm
 
 in Vagrantfile and access the site on whatever IP is assigned to it via DHCP.
 
-
-Virtualbox basebox installation
--------------------------------
-
-Make sure you have a correct debian box in vagrant. For vagrant with virtualbox, you could use the ones listed
-here http://puppet-vagrant-boxes.puppetlabs.com/.
-
-::
-
- vagrant box add debian http://puppet-vagrant-boxes.puppetlabs.com/debian-73-x64-virtualbox-puppet.box
-
-VMWare fusion basebox installation
-----------------------------------
-
-Buy and install VMWare fusion.
-
-Also buy the vagrant VMWare fusion adaptor. Follow the instructions which includes fetching
-the plugin and installing the license with
-
-::
-
- vagrant plugin install vagrant-vmware-fusion
- vagrant plugin license vagrant-vmware-fusion license.lic
-
-Then import the correct debian box with
-
-::
-
- vagrant box add debian http://puppet-vagrant-boxes.puppetlabs.com/debian-70rc1-x64-vf503.box --provider vmware_fusion
-
-All of theses steps are only needed on the first run.
-
-When using vmware_fusion, remember to set the env variable VAGRANT_DEFAULT_PROVIDER=vmware_fusion or specify
---provider=vmware_fusion when doing vagrant up
-
-::
-
- vagrant up --provider=vmware_fusion
-
-Enjoy!
 
 Modifying the manifest
 ----------------------
@@ -147,6 +118,4 @@ Wish list and ToDo
 * Make folder for sites configurable instead of being hardcoded to /home/sites
 * Provide options for using FastCGI with Apache or Nginx instead
 * Provide Varnish default settings
-* Provide Elasticsearch setup
 * Setup Virtualhost with same site in production mode
-* Cleaner dependencies

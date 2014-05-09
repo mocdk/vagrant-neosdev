@@ -53,8 +53,7 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 		require => [Exec['download composer'], File["/home/sites/${sitename}"]],
 		creates => "/home/sites/${sitename}/flow",
 		timeout => 3600,
-		notify  => Class['Apache::Service'],
-		refresh => Exec['fix-permissions-${sitename}]
+		notify  => Class['Apache::Service']
 	}
 
 	exec { "fix-permissions-${sitename}":

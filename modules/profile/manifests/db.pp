@@ -16,10 +16,11 @@ class profile::db {
 	}
 
 	mysql_grant { 'root@network/*.*':
-	ensure     => 'present',
-	options    => ['GRANT'],
-	privileges => ['ALL'],
-	table      => '*.*',
-	user       => 'root@%',
+		ensure     => 'present',
+		options    => ['GRANT'],
+		privileges => ['ALL'],
+		table      => '*.*',
+		user       => 'root@%',
+		require	=> Mysql_user['root@%']
 	}
 }

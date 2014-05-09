@@ -5,7 +5,6 @@ define ssh::known_hosts ($username, $hostname = $title, $homedir = "/home/${user
 		file { "${homedir}/.ssh":
 			ensure => directory,
 			owner => 'vagrant',
-			group => 'vagrant',
 			mode => 0600
 		}
 	}
