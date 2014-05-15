@@ -1,2 +1,1 @@
-#include role::neosdemosite
-include role::fvm
+include role::venstre

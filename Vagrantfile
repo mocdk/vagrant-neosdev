@@ -2,10 +2,10 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.hostname = "fvm"
+  config.vm.hostname = "venstre"
   config.vm.box = "mocdk/debian-puppet-typo3"
 
-  config.vm.network :private_network, ip: "192.168.66.60"
+  config.vm.network :private_network, ip: "192.168.66.70"
   config.vm.network "public_network"
   config.ssh.forward_agent = true
   config.vm.provision "puppet" do |puppet|
