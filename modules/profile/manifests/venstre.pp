@@ -5,8 +5,11 @@ class profile::venstre {
 	include profile::db
 	include profile::memcached
 	include profile::elasticsearch
+	include profile::varnish
 
 	class { 'apt::backports':
 	}
+
+	$sitename = 'venstre.dk'
 
 }
