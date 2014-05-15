@@ -1,0 +1,11 @@
+[program:<%= @title %>]
+command=<%= @command %>
+#/usr/bin/php /home/sites/fvm/htdocs/typo3/cli_dispatch.phpsh extbase queueworker:start 50 true
+autostart=<%= @autostart %>
+exitcode=<%= @exitcodes %>
+user=<%= @user %>
+stdout_logfile=<%= @stdout_logfile %>
+stdout_logfile_maxbytes=<%= @stdout_logfile_maxbytes %>
+stdout_logfile_backups=10
+stderr_logfile=<%= @stderr_logfile %>
+stderr_logfile_maxbytes=<%= @stdout_logfile_maxbytes %>
