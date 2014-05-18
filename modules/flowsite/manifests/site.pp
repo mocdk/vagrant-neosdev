@@ -35,7 +35,12 @@
 #
 # Copyright 2012-2013 Jan-Erik Revsbech MOC A/S, unless otherwise noted.
 #
-define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-distribution', $repository = 'http://packagist.org/', $url = $title) {
+define flowsite::site (
+	$sitename = $title,
+	$basedistribution='typo3/flow-base-distribution',
+	$repository = 'http://packagist.org/',
+	$url = $title,
+	$port = 80) {
 
 	## Create dir for the neos site
 	file { "/home/sites/${sitename}": ensure => "directory", require => File["/home/sites"], owner => 'vagrant'}
@@ -79,7 +84,7 @@ define flowsite::site ($sitename = $title, $basedistribution='typo3/flow-base-di
 	}
 
 	apache::vhost { $url:
-		port    => '80',
+		port    => $port,
 		#default_vhost => true,
 		docroot => "/home/sites/${sitename}/flow/Web",
 		docroot_owner => 'vagrant',
