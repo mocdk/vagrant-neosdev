@@ -8,18 +8,20 @@ class nodejs::moc {
 		pin         => 100,
 		include_src => false,
 	}
-	#Need to run this
-	#update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100
 
+	package { 'nodejs':
+		ensure  => installed
+	}
 
 	exec { 'update-alternatives-nodejs':
 		path    => '/usr/bin:/bin:/usr/sbin:/sbin:./',
 		command => 'update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100',
-		unless => 'update-alternatives --list nodejs'
+		unless => 'update-alternatives --list nodejs',
+		require => Package['nodejs']
 	}
 
 	package { 'npm':
 		ensure  => present,
-		require => Apt::Source['sid']
+		require => [Apt::Source['sid'], Package['nodejs']]
 	}
 }

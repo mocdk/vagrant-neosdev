@@ -16,7 +16,10 @@ You can ssh into the machine with vagrant ssh
 
 The site is located in /home/sites/venstre.dk/flow/
 
-Remember to do 
+If your local Vagrant host already has git config preset, you name and email will be set for 
+the vagrant user.
+
+Otherwise, remember to do 
 
 git config --global user.name "YOURNAME"
 git config --global user.email "YOUR EMAIL"
