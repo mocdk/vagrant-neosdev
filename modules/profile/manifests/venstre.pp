@@ -9,19 +9,29 @@ class profile::venstre {
 	include profile::nfs-server
 	include nodejs::moc
 
-	package {'pngcrush': ensure => installed}
+	#Packages for doing advanved image manipulation and optimization
+	$packageList = ['advancecomp', 'gifsicle', 'jhead', 'jpegoptim', 'libjpeg-progs', 'optipng', 'pngcrush']
+	package {$packageList: ensure => installed}
+
+	package { 'image_optim':
+		ensure   => 'installed',
+		provider => 'gem',
+	}
 
 	# Add private repository to roots known hosts
 	ssh::known_hosts {'git.moc.net':
 		username => 'vagrant',
 	}
 
-	$npm_packages = ['grunt','grunt-cli']
+
+	$npm_packages = ['grunt','grunt-cli', 'svgo']
 	package { $npm_packages:
 		ensure  => present,
 		provider => 'npm',
 		require => Package['npm']
 	}
+
+
 
 	class { 'apt::backports':
 	}
