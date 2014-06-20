@@ -78,7 +78,7 @@ sub vcl_recv {
     }
 
     #Always cache all images
-    if (req.url ~ "\.(png|gif|jpg|swf|js|css)$") {
+    if (req.url ~ "\.(png|gif|jpg|swf)$") {
 
       return(lookup);
     }
@@ -135,7 +135,7 @@ sub vcl_fetch {
 	  	return (deliver);
 	}
 
-	if (req.url ~ "\.(png|gif|jpg|swf|js|css)$") {
+	if (req.url ~ "\.(png|gif|jpg|swf)$") {
 		unset beresp.http.set-cookie;
 		set beresp.http.X-Cacheable = "YES:jpg,gif,jpg,swf, js and css are always cached";
 
