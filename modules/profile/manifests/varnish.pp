@@ -2,7 +2,11 @@ class profile::varnish ($webserver_port = 8081, $varnish_port = 80) {
 
 	package {'varnish': ensure => installed }
 
-	service {'varnish': ensure => running, require => Package['varnish'] }
+	service {
+		'varnish': ensure => running,
+		require => Package['varnish'],
+		enable => true,
+	}
 
 	file { "/etc/varnish/default.vcl":
 		content => template('profile/varnish/default.vcl.erb'),
