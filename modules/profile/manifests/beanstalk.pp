@@ -11,5 +11,5 @@ DAEMON_OPTS="-l $BEANSTALKD_LISTEN_ADDR -p $BEANSTALKD_LISTEN_PORT"
 START=yes'
 	}
 
-	service {'beanstalkd': ensure => running, require => [File['/etc/default/beanstalkd'], Package['beanstalk']]}
+	service {'beanstalkd': ensure => running, require => [File['/etc/default/beanstalkd'], Package['beanstalk']], enable => true}
 }

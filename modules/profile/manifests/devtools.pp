@@ -1,7 +1,7 @@
 class profile::devtools {
 
 	$devpackagelist = [
-		"git",
+		"git/wheezy-backports",
 		"ruby-compass"
 	]
 

@@ -23,7 +23,8 @@ class profile::mongo {
 
 	service {'mongodb':
 		ensure => 'running',
-		require => Package['mongo-server']
+		require => Package['mongo-server'],
+		enable => true
 	}
 
 	package {"php5-mongo":

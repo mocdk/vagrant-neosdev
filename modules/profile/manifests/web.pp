@@ -2,7 +2,14 @@ class profile::web {
 	#Install Apache
 	class { 'apache':
 		mpm_module => 'prefork',
-		default_vhost => false
+		default_vhost => false,
+		purge_configs => false #We need to allow custom sites not controlled by puppet
+	}
+
+	apache::vhost { 'default.dev':
+	  port    => 8081,
+	  docroot => '/var/www/',
+	  default_vhost => true,
 	}
 
 	# Make sure PHP is included
@@ -10,7 +17,6 @@ class profile::web {
 
 	apache::mod { 'rewrite': }
 	apache::mod { 'headers': }
-
 
 	# Root directory for sites in MOC Configuration
 	file { "/home/sites":

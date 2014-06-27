@@ -4,6 +4,7 @@ class profile::memcached {
 
 	service {'memcached':
 		ensure => running,
-		require => Package['memcached']
+		require => Package['memcached'],
+		enable => true
 	}
 }
