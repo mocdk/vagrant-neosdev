@@ -27,6 +27,8 @@ class profile::base {
 		"tcpdump",
 		"mtr",
 		"emacs",
+		"yaml-mode",
+		"php-elisp",
 		"locate",
 		"vim",
 		"vim-runtime",
@@ -49,6 +51,7 @@ class profile::base {
         "lsb-base",
         "lsb-release",
 		"pciutils",
+		"rubygems"
 
 	]
 
