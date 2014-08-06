@@ -20,7 +20,8 @@ class profile::elasticsearch {
 
 	service {'elasticsearch':
 		ensure => "running",
-		require => Package['java', 'elasticsearch']
+		require => Package['java', 'elasticsearch'],
+		enable => true
 	}
 
 }
