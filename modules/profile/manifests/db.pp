@@ -12,7 +12,8 @@ class profile::db {
 
 	#Make a root user accessible for all networks, with access to all db's
 	mysql_user { 'root@%':
-		ensure                   => 'present'
+		ensure			=> 'present',
+		password_hash	=> '*04E6E1273D1783DF7D57DC5479FE01CFFDFD0058'
 	}
 
 	mysql_grant { 'root@network/*.*':
