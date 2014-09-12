@@ -2,6 +2,7 @@ class profile::base {
 	class {'apt':
 		purge_sources_list => true,
 		purge_sources_list_d => true,
+		always_apt_update => true
 	}
 
 	apt::source { 'main':

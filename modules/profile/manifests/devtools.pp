@@ -1,14 +1,21 @@
 class profile::devtools {
 
 	$devpackagelist = [
-		"git-man/wheezy-backports",
-		"git/wheezy-backports",
 		"ruby-compass"
+	]
+
+	$devBackportsPackagelist = [
+		"git-man",
+		"git"
 	]
 
 	package { $devpackagelist:
 		ensure => present,
-		require => Apt::Source['backports']
+	}
+
+	apt::force { $devBackportsPackagelist:
+	  release => 'wheezy-backports',
+	  require => Apt::Source['backports'],
 	}
 
 }
