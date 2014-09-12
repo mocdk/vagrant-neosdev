@@ -14,14 +14,20 @@ class profile::elasticsearch {
 	}
 
 	package { "elasticsearch":
-		ensure => "installed",
-		require => Apt::Source['elasticsearch']
+		ensure => "latest",
+		require => Apt::Source['elasticsearch'],
 	}
 
 	service {'elasticsearch':
 		ensure => "running",
 		require => Package['java', 'elasticsearch'],
-		enable => true
+		enable => true,
+	}
+
+	file { "/etc/elasticsearch/elasticsearch.yml":
+		content => template('profile/templates/elasticsearch/elasticsearch.yml.erb'),
+		require => Package['elasticsearch'],
+		notify => Service['elasticsearch'],
 	}
 
 }
