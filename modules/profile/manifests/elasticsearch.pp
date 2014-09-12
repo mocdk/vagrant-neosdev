@@ -7,7 +7,7 @@ class profile::elasticsearch {
 	}
 
 	apt::source { 'elasticsearch':
-		location => 'http://packages.elasticsearch.org/elasticsearch/1.0/debian',
+		location => 'http://packages.elasticsearch.org/elasticsearch/1.3/debian',
 		release => 'stable',
 		require => Apt::Key['elasticsearch'],
 		include_src => false
