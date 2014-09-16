@@ -25,7 +25,7 @@ class profile::elasticsearch {
 	}
 
 	file { "/etc/elasticsearch/elasticsearch.yml":
-		content => template('profile/templates/elasticsearch/elasticsearch.yml.erb'),
+		content => template('profile/elasticsearch/elasticsearch.yml.erb'),
 		require => Package['elasticsearch'],
 		notify => Service['elasticsearch'],
 	}
