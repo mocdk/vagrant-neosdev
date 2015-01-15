@@ -3,6 +3,7 @@ class profile::php {
 	include php::params
 	include php::pear
 	include php::composer
+	include mailcatcher
 
 	# Extensions must be installed before they are configured
 	Php::Extension <| |> -> Php::Config <| |>
