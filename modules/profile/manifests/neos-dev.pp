@@ -1,51 +1,58 @@
 class profile::neos-dev {
-	include profile::web
-	include profile::php
-	include profile::devtools
-	include profile::db
-	include profile::memcached
-	include profile::elasticsearch
-	include profile::varnish
-	include profile::nfs-server
-	include nodejs::moc
-	include profile::mongo
-	include profile::beanstalk
+		include profile::web
+		include profile::php
+		include profile::devtools
+		include profile::db
+		include profile::memcached
+		include profile::elasticsearch
+		include profile::varnish
+		include profile::nfs-server
+		include nodejs::moc
+		include profile::mongo
+		include profile::beanstalk
 
-	# Add private repository to roots known hosts
-	ssh::known_hosts {'github.com': username => 'vagrant'}
-	ssh::known_hosts {'git.moc.net': username => 'vagrant'}
-	ssh::known_hosts {'gerrit.moc.net': username => 'vagrant'}
-	ssh::known_hosts {'gerrit.mocsystems.com': username => 'vagrant'}
-	ssh::known_hosts {'moc-files': username => 'vagrant'}
+# Add private repository to roots known hosts
+		ssh::known_hosts { 'github.com': username => 'vagrant' }
+		ssh::known_hosts { 'git.moc.net': username => 'vagrant' }
+		ssh::known_hosts { 'gerrit.moc.net': username => 'vagrant' }
+		ssh::known_hosts { 'gerrit.mocsystems.com': username => 'vagrant' }
+		ssh::known_hosts { 'moc-files': username => 'vagrant' }
 
-	#Packages for doing advanved image manipulation and optimization
-	$packageList = ['advancecomp', 'gifsicle', 'jhead', 'jpegoptim', 'libjpeg-progs', 'optipng', 'pngcrush']
-	package {$packageList: ensure => installed}
+#Packages for doing advanved image manipulation and optimization
+		$packageList = ['advancecomp', 'gifsicle', 'jhead', 'jpegoptim', 'libjpeg-progs', 'optipng', 'pngcrush']
+		package { $packageList: ensure => installed }
 
-	class { 'ohmyzsh': }
-	ohmyzsh::install { 'vagrant': }
-	ohmyzsh::theme { 'vagrant': theme => 'dpoggi' }
-	ohmyzsh::plugins { 'vagrant': plugins => 'git github' }
+		class { 'ohmyzsh': }
+		ohmyzsh::install { 'vagrant': }
+		ohmyzsh::theme { 'vagrant': theme => 'dpoggi' }
+		ohmyzsh::plugins { 'vagrant': plugins => 'git github' }
 
-	package { 'image_optim':
-		ensure   => 'installed',
-		provider => 'gem',
-	}
+		file { '/home/vagrant/.zshrc':
+				ensure  => file,
+				backup  => false,
+				content => template("profile/profile/.zshrc.erb"),
+				require => Ohmyzsh::Install['vagrant']
+		}
 
-	$npm_packages = ['grunt','grunt-cli', 'svgo']
-	package { $npm_packages:
-		ensure  => present,
-		provider => 'npm',
-		require => Package['npm']
-	}
+		package { 'image_optim':
+				ensure   => 'installed',
+				provider => 'gem',
+		}
 
-	class { 'apt::backports':
-	}
+		$npm_packages = ['grunt','grunt-cli', 'svgo']
+		package { $npm_packages:
+				ensure   => present,
+				provider => 'npm',
+				require  => Package['npm']
+		}
 
-	file { '/etc/motd':
-		ensure  => file,
-		backup  => false,
-		content => template("profile/motd/motd.erb"),
-	}
+		class { 'apt::backports':
+		}
+
+		file { '/etc/motd':
+				ensure  => file,
+				backup  => false,
+				content => template("profile/motd/motd.erb"),
+		}
 
 }
