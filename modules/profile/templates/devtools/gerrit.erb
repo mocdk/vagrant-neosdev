@@ -1,0 +1,37 @@
+#! /bin/bash
+# by Aske Ertmann 2013
+
+
+URL=$( git config remote.origin.url)
+if  [[ $URL == ssh* ]] ;
+then
+	RepositoryName=$( git config remote.origin.url | cut -d/ -f4,5,6,7 )
+else
+	RepositoryName=$( git config remote.origin.url | cut -d: -f2 )
+fi
+
+if [ -z "${RepositoryName}" ]; then
+	echo "Error: No \$RepositoryName found."
+	echo "Command failed: git config remote.origin.url"
+	exit 1
+fi
+
+if [ ! -d ".git" ]; then
+	echo "Error: No '.git' directory found, make sure you execute this from the Git repository root."
+	exit 2
+fi
+
+if [ $LC_MOC_DEFAULT_USERNAME ];
+then
+	git config remote.origin.pushurl ssh://$LC_MOC_DEFAULT_USERNAME@gerrit.moc.net:29418/$RepositoryName
+else
+	git config remote.origin.pushurl ssh://gerrit.moc.net:29418/$RepositoryName
+fi
+
+git config remote.origin.pushurl ssh://gerrit.moc.net:29418/$RepositoryName
+git config remote.origin.push HEAD:refs/for/master
+curl -k https://moc.net/commit-msg > .git/hooks/commit-msg 2> /dev/null
+chmod a+x .git/hooks/commit-msg
+git config branch.master.rebase true
+
+echo "Set up gerrit succesfully for \"${RepositoryName}\""
