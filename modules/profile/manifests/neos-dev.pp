@@ -34,6 +34,18 @@ class profile::neos-dev {
 				require => Ohmyzsh::Install['vagrant']
 		}
 
+		file { '/home/vagrant/.gitconfig':
+				ensure  => file,
+				backup  => false,
+				content => template("profile/profile/.gitconfig.erb"),
+		}
+
+		file { '/home/vagrant/.gitignore_global':
+				ensure  => file,
+				backup  => false,
+				content => template("profile/profile/.gitignore_global.erb"),
+		}
+
 		package { 'image_optim':
 				ensure   => 'installed',
 				provider => 'gem',
