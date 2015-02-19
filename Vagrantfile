@@ -37,4 +37,13 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :inline => "echo '   > > > running config/local_bootstrap.sh'"
     config.vm.provision :shell, :path => "config/local-bootstrap.sh"
   end
+
+  config.trigger.after :up do
+    run "./mountNfs.sh"
+  end
+
+  config.trigger.before :halt do
+    run "./unmountNfs.sh"
+  end
+  
 end
