@@ -1,5 +1,9 @@
+DEPRECATED!
+===========
+See https://github.com/mocdk/vagrant-moc instead (using ansible instead of puppet)
+
 MOC TYPO3 Neos and Flow general purpose development server
-===========================================================
+----------------------------------------------------------
 
 Vagrant configuration for developing TYPO3 FLow and Neos site in an environment similar to
 MOC hosting production machines. The machine runs Debian wheezy, and is provisioned using the built-in puppet provisioner.
